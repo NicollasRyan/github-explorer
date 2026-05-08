@@ -7,7 +7,7 @@ export const AppRoutes = () => (
     <Routes>
       <Route path="/" element={<Home />} />
       <Route
-        path="/repository"
+        path={`/users/:username/repos/:repoName`}
         element={<RepositoryDetails />}
       />
     </Routes>
