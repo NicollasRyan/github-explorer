@@ -9,7 +9,7 @@ export const SortSelector = ({ order, onOrderChange }: SortSelectorProps) => {
   return (
     <>
       <label htmlFor="sort-order" className="form-label">
-        Ordenar repositórios
+        Ordenar repositórios por:
       </label>
       <select
         className="form-select mb-4"
