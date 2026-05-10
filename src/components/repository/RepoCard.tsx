@@ -32,11 +32,21 @@ export const RepoCard = ({ repo, username }: RepoCardProps) => {
         </div>
 
         <div className="d-flex gap-3">
-          <a href={repo.html_url} target="_blank" rel="noopener noreferrer">
+          <a
+            href={repo.html_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Abrir o repositório ${repo.name} no GitHub em nova aba`}
+          >
             GitHub
           </a>
 
-          <Link to={detailsPath}>Detalhes</Link>
+          <Link
+            to={detailsPath}
+            aria-label={`Ver página de detalhes do repositório ${repo.name}`}
+          >
+            Detalhes
+          </Link>
         </div>
       </div>
     </div>

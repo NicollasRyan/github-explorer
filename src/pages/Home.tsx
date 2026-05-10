@@ -5,7 +5,7 @@ import { useGithubUser } from "../hooks/useGithubUser";
 import { UserCard } from "../components/user/UserCard";
 import { useRepositories } from "../hooks/useRepositories";
 import { Loader } from "../components/common/Loader";
-import ErrorMessage from "../components/common/ErrorMensage";
+import { ErrorMessage } from "../components/common/ErrorMessage";
 import { EmptyState } from "../components/common/EmptyState";
 import { RepoList } from "../components/repository/RepoList";
 import { SortSelector } from "../components/repository/SortSelector";
@@ -18,10 +18,24 @@ export function Home() {
   const itemsPerPage = 10;
 
   const {
+    user,
+    loading: userLoading,
+    error: userError,
+  } = useGithubUser(username);
+
+  const repoFetchLogin =
+    username.trim().length > 0 &&
+    !userLoading &&
+    user !== null &&
+    !userError
+      ? user.login
+      : "";
+
+  const {
     repositories,
     loading: repositoriesLoading,
     error: repositoriesError,
-  } = useRepositories(username);
+  } = useRepositories(repoFetchLogin);
 
   const sortedRepositories = useMemo(() => {
     return [...repositories].sort((a, b) =>
@@ -37,12 +51,6 @@ export function Home() {
     startIndex + itemsPerPage,
   );
 
-  const {
-    user,
-    loading: userLoading,
-    error: userError,
-  } = useGithubUser(username);
-
   function handleSearch(nextUsername: string) {
     setUsername(nextUsername);
     setCurrentPage(1);
@@ -54,9 +62,9 @@ export function Home() {
   }
 
   const hasSearched = username.trim().length > 0;
-  const isLoading = userLoading || repositoriesLoading;
+  const searchInFlight = userLoading || repositoriesLoading;
   const hasRepositories = sortedRepositories.length > 0;
-  const shouldShowInitialState = !hasSearched && !isLoading;
+  const shouldShowInitialState = !hasSearched && !userLoading;
   const shouldShowUserContent = Boolean(user) && !userError;
   const shouldShowRepositories =
     !repositoriesLoading && hasRepositories && !repositoriesError;
@@ -68,13 +76,13 @@ export function Home() {
 
   return (
     <div className="container py-5">
-      <SearchBar onSearch={handleSearch} disabled={isLoading} />
+      <SearchBar onSearch={handleSearch} disabled={searchInFlight} />
 
       {shouldShowInitialState && (
         <EmptyState message="Busque um usuário do GitHub para ver seus repositórios." />
       )}
 
-      {isLoading && <Loader />}
+      {hasSearched && userLoading && <Loader />}
 
       {userError && <ErrorMessage message={userError} />}
 
@@ -84,11 +92,16 @@ export function Home() {
 
           <SortSelector order={order} onOrderChange={handleOrderChange} />
 
+          {repositoriesLoading && !repositoriesError && <Loader />}
+
           {repositoriesError && <ErrorMessage message={repositoriesError} />}
 
           {shouldShowRepositories && (
             <>
-              <RepoList repositories={paginatedRepositories} username={username} />
+              <RepoList
+                repositories={paginatedRepositories}
+                username={user.login}
+              />
               <Pagination
                 currentPage={currentPage}
                 totalItems={sortedRepositories.length}

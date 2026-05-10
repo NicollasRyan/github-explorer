@@ -1,6 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 import { Loader } from "../components/common/Loader";
-import ErrorMessage from "../components/common/ErrorMensage";
+import { ErrorMessage } from "../components/common/ErrorMessage";
 import { useRepositoryDetails } from "../hooks/useRepositoryDetails";
 
 export const RepositoryDetails = () => {
