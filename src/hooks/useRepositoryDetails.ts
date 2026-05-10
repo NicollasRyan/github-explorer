@@ -1,40 +1,40 @@
 import { useEffect, useState } from "react";
-import { getRepositories } from "../services/github.service";
+import { getRepositoryDetails } from "../services/github.service";
 import { Repository } from "../types/github";
 import { getGithubErrorMessage } from "../utils/getGithubErrorMessage";
 
-export const useRepositories = (username: string) => {
-  const [repositories, setRepositories] = useState<Repository[]>([]);
+export const useRepositoryDetails = (username?: string, repoName?: string) => {
+  const [repository, setRepository] = useState<Repository | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (!username.trim()) {
-      setRepositories([]);
-      setError("");
+    if (!username || !repoName) {
+      setRepository(null);
+      setError("Repositório não encontrado");
       setLoading(false);
       return;
     }
 
     let isActive = true;
 
-    const fetchRepos = async () => {
+    const fetchRepository = async () => {
       setLoading(true);
       setError("");
 
       try {
-        const data = await getRepositories(username);
+        const data = await getRepositoryDetails(username, repoName);
 
         if (isActive) {
-          setRepositories(data);
+          setRepository(data);
         }
       } catch (error) {
         if (isActive) {
-          setRepositories([]);
+          setRepository(null);
           setError(
             getGithubErrorMessage(error, {
-              notFound: "Repositórios não encontrados",
-              fallback: "Erro ao buscar repositórios",
+              notFound: "Repositório não encontrado",
+              fallback: "Erro ao carregar repositório",
             }),
           );
         }
@@ -45,12 +45,12 @@ export const useRepositories = (username: string) => {
       }
     };
 
-    fetchRepos();
+    fetchRepository();
 
     return () => {
       isActive = false;
     };
-  }, [username]);
+  }, [username, repoName]);
 
-  return { repositories, loading, error };
+  return { repository, loading, error };
 };

@@ -1,46 +1,131 @@
-# Getting Started with Create React App
+# GitHub Explorer
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Aplicacao client-side em React para buscar usuarios do GitHub, listar repositorios, ordenar por estrelas e consultar detalhes de um repositorio.
 
-## Available Scripts
+O projeto foi estruturado com foco em separacao de responsabilidades, tipagem com TypeScript, tratamento de estados de interface e consumo organizado da API publica do GitHub.
 
-In the project directory, you can run:
+## Funcionalidades
 
-### `npm start`
+- Busca de usuario pelo login do GitHub.
+- Exibicao de dados principais do usuario.
+- Listagem de repositorios publicos.
+- Ordenacao por quantidade de estrelas.
+- Paginacao client-side da lista de repositorios.
+- Tela de detalhes do repositorio.
+- Link externo para abrir o repositorio no GitHub.
+- Estados de carregamento, erro e lista vazia.
+- Tratamento especifico para erros comuns da API, como usuario nao encontrado e limite de requisicoes.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Tecnologias
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- React
+- TypeScript
+- Vite
+- React Router
+- Axios
+- Bootstrap
+- Bootstrap Icons
 
-### `npm test`
+## Como Executar
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Instale as dependencias:
 
-### `npm run build`
+```bash
+yarn install
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Execute em modo de desenvolvimento:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+yarn start
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Acesse:
 
-### `npm run eject`
+```text
+http://localhost:5173
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Gere a build de producao:
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```bash
+yarn build
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Visualize a build localmente:
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+```bash
+yarn preview
+```
 
-## Learn More
+## Scripts
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- `yarn start`: inicia o servidor de desenvolvimento com Vite.
+- `yarn dev`: alias para iniciar o servidor de desenvolvimento.
+- `yarn build`: executa a checagem TypeScript e gera a build de producao.
+- `yarn preview`: serve localmente a build gerada.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Estrutura Do Projeto
+
+```text
+src/
+  components/
+    common/        Componentes compartilhados, como Loader, EmptyState, ErrorMessage e Pagination.
+    repository/    Componentes relacionados a repositorios.
+    user/          Componentes relacionados a busca e exibicao de usuario.
+  hooks/           Hooks responsaveis por buscar dados e controlar loading/error/data.
+  pages/           Paginas principais da aplicacao.
+  routes/          Configuracao das rotas.
+  services/        Configuracao do Axios e chamadas para a API do GitHub.
+  types/           Tipos compartilhados da aplicacao.
+  utils/           Funcoes utilitarias reutilizaveis.
+```
+
+## Rotas
+
+- `/`: pagina inicial com busca de usuario e listagem de repositorios.
+- `/users/:username/repos/:repoName`: pagina de detalhes do repositorio.
+
+## Decisoes Tecnicas
+
+- As chamadas HTTP foram centralizadas em `src/services` para evitar acoplamento entre componentes e API externa.
+- Os hooks encapsulam busca, `loading`, `error` e dados, mantendo as paginas mais declarativas.
+- A ordenacao dos repositorios e feita no client com `useMemo`, evitando nova chamada para a API ao alternar a ordem.
+- A paginacao atual tambem e client-side, baseada nos repositorios ja carregados.
+- As rotas usam parametros para permitir acesso direto a pagina de detalhes de um repositorio.
+- O tratamento de erro foi isolado em `getGithubErrorMessage`, permitindo diferenciar erros como `404`, `403` e falha de conexao.
+- O projeto usa Vite para um setup mais moderno, rapido e simples que Create React App.
+
+## Limitacoes Conhecidas
+
+- A listagem carrega ate 100 repositorios por usuario usando `per_page=100`.
+- Usuarios com mais de 100 repositorios nao terao todos os repositorios exibidos nesta versao.
+- A API publica do GitHub possui limite de requisicoes e pode retornar erro `403`.
+- A aplicacao nao usa autenticacao com token do GitHub.
+- A busca, ordenacao e pagina atual ainda nao sao persistidas na URL.
+
+## Melhorias Futuras
+
+- Implementar paginacao real usando os parametros `page` e `per_page` da API do GitHub.
+- Persistir estado de busca na URL com query params, por exemplo `?user=facebook&sort=desc&page=1`.
+- Adicionar testes automatizados para componentes, hooks e fluxos principais.
+- Adicionar Error Boundary para tratar falhas inesperadas de renderizacao.
+- Considerar TanStack Query para cache, retry, deduplicacao de requests e controle mais robusto de estados assincronos.
+- Adicionar suporte opcional a token do GitHub para reduzir problemas com rate limit.
+
+## Qualidade E Boas Praticas
+
+- TypeScript com `strict` habilitado.
+- Componentes separados por dominio.
+- Hooks dedicados para acesso a dados.
+- Services tipados com os modelos da API.
+- Links externos usam `rel="noopener noreferrer"`.
+- Estados de loading, erro e vazio tratados explicitamente.
+- Rotas declarativas com React Router.
+- UI responsiva baseada em Bootstrap.
+
+## Observacoes Para Avaliacao
+
+Este projeto prioriza clareza de organizacao, tipagem e separacao de responsabilidades. A solucao atual atende ao fluxo principal do desafio, mantendo algumas decisoes simples e documentadas, como paginacao client-side e limite de 100 repositorios por usuario.
+
+Para uma versao mais proxima de producao, os principais proximos passos seriam paginacao real da API, persistencia do estado na URL, testes automatizados e uso de cache para requisicoes.

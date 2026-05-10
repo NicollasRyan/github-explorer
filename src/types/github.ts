@@ -13,6 +13,11 @@ export interface Repository {
   description: string | null;
   stargazers_count: number;
   forks_count: number;
+  watchers_count: number;
+  open_issues_count: number;
+  default_branch: string;
+  created_at: string;
+  updated_at: string;
   html_url: string;
   language: string | null;
 }

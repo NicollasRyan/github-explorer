@@ -6,7 +6,7 @@ interface UserCardProps {
 
 export const UserCard = ({ user }: UserCardProps) => {
   return (
-    <div className="card mb-4 p-3">
+    <div className="card p-3 d-flex flex-column flex-sm-row align-items-center align-items-sm-start gap-3">
       <div className="d-flex align-items-center gap-3">
         <img
           src={user.avatar_url}
@@ -14,7 +14,7 @@ export const UserCard = ({ user }: UserCardProps) => {
           className="rounded-circle"
           width={120}
         />
-        <div>
+        <div className="text-center text-sm-start">
           <h2>{user.login}</h2>
           <p>{user.bio ?? "Sem bio disponível"}</p>
           <p>
