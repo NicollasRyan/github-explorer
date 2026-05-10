@@ -7,18 +7,23 @@ interface SortSelectorProps {
 
 export const SortSelector = ({ order, onOrderChange }: SortSelectorProps) => {
   return (
-    <>
-      <label htmlFor="sort-order" className="form-label">
-        Ordenar repositórios por:
+    <div className="mb-4">
+      <label htmlFor="sort-order" className="form-label small text-muted mb-1">
+        Ordenar repositórios
       </label>
-      <select
-        className="form-select mb-4"
-        value={order}
-        onChange={(e) => onOrderChange(e.target.value as SortOrder)}
-      >
-        <option value="desc">Mais estrelas</option>
-        <option value="asc">Menos estrelas</option>
-      </select>
-    </>
+      <div className="row g-2">
+        <div className="col-12 col-sm-8 col-lg-5">
+          <select
+            id="sort-order"
+            className="form-select form-select-sm shadow-sm w-100"
+            value={order}
+            onChange={(e) => onOrderChange(e.target.value as SortOrder)}
+          >
+            <option value="desc">Mais estrelas</option>
+            <option value="asc">Menos estrelas</option>
+          </select>
+        </div>
+      </div>
+    </div>
   );
 };

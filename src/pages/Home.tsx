@@ -75,7 +75,14 @@ export function Home() {
     !repositoriesError;
 
   return (
-    <div className="container py-5">
+    <div className="container py-4 py-md-5">
+      <header className="mb-4 pb-3 border-bottom border-secondary-subtle">
+        <h1 className="h3 fw-semibold mb-1">GitHub Explorer</h1>
+        <p className="text-muted small mb-0">
+          Busque perfis e explore repositórios públicos ordenados por estrelas.
+        </p>
+      </header>
+
       <SearchBar onSearch={handleSearch} disabled={searchInFlight} />
 
       {shouldShowInitialState && (
